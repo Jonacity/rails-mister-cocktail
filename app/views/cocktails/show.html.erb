@@ -1,6 +1,25 @@
 <h1><%= @cocktail.name %></h1>
 
-<%= cl_image_tag @cocktail.photo, height: 300, width: 400, crop: :fill %>
+<% if @cocktail.photo.presence %>
+<%= image_tag @cocktail.photo.url, height: 300, width: 400, crop: :fill %>
+<% else %>
+<%= image_tag 'card.jpg', height: 300, width: 400, crop: :fill %>
+<% end %>
+
+<br>
+<br>
+<button type="button" class="btn btn-primary btn-sm">
+  <%= link_to "Edit cocktail", edit_cocktail_path(@cocktail) %>
+</button>
+
+<button type="button" class="btn btn-danger btn-sm">
+  <%= link_to "Delete cocktail", cocktail_path(@cocktail), method: :delete, data: { confirm: "Are you sure?" } %>
+</button>
+
+<br>
+<br>
+
+<h3>Recipe</h3>
 
 <% @cocktail.doses.each do |dose| %>
 <p><%= dose.description %> of <%= dose.ingredient.name %> --
@@ -10,10 +29,6 @@
 </p>
 <% end %>
 
-
-<br>
-<br>
-
 <h3>Reviews</h3>
 
 <% @cocktail.reviews.each do |review| %>
@@ -21,10 +36,8 @@
 <% end %>
 
 <br>
-<%= simple_form_for [@cocktail, @review] do |f| %>
-  <%= f.input :content %>
-  <%= f.submit "add a review", class: "btn btn-primary pull-right" %>
-<% end %>
+
+<%= render 'review_form' %>
 
 <br>
 <%= link_to "New dose", new_cocktail_dose_path(@cocktail), class: "btn btn-primary" %>
